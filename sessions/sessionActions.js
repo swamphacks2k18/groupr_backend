@@ -18,8 +18,8 @@ module.exports = {
 	        })
 
 	    try {
-	    	await newSession.save();
-	    	res.status(200).send();
+	    	const resp = await newSession.save();
+	    	res.status(200).send(resp);
 	    } catch(err) {
 	    	res.send(err);
 	    }
@@ -42,7 +42,7 @@ module.exports = {
 		 | |    | |__| | |__| | |__| | |____  | | / ____ \ |____   | | | |__| | | \ \
 		 |_|     \____/|_____/ \_____|______| |_|/_/    \_\_____|  |_|  \____/|_|  \_\
 
-				what is it
+				~~~~~~~~~~~~~~~~~~~~~~~~~~what is it~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			*/
 
 	    let fudgeFactor = 1.05;
@@ -56,11 +56,10 @@ module.exports = {
 	},
 
 	sessionCancel: async function (req, res) {
-		const owner = req.body.owner;
-		const name = req.body.name;
+		const id = req.body.id
 
 		try {
-			const sessions = await Session.remove({owner: owner, name: name});
+			const sessions = await Session.findbyIDandRemove(id);
 			console.log(sessions);
 
 			res.status(200).send({"Records deleted": sessions.n});
@@ -93,7 +92,7 @@ module.exports = {
 
 	sessionView: async function (req, res) {
 		try {
-			const session = await Session.findById(req.query.sessionId);
+			const session = await Session.find(req.query);
 
 			res.status(200).send(session);
 		}
@@ -102,6 +101,7 @@ module.exports = {
     		else res.status(500).send(err);
 		}
 	}
+
  }
 
  const ErrBadReq = (message) => {
