@@ -12,6 +12,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 
 // user routes
 app.post('/user/create', userActions.createUser);
+app.get('/user/get', userActions.getUser);
 
 // session routes
 app.post('/session/create', sessionActions.sessionCreate);
