@@ -15,8 +15,9 @@ app.post('/user/create', userActions.createUser);
 
 // session routes
 app.post('/session/create', sessionActions.sessionCreate);
-app.get('/session/getinradius', sessionActions.getInRadius); 
-app.put('/session/join', sessionActions.sessionJoin); 
+app.get('/session/getinradius', sessionActions.getInRadius);
+app.put('/session/join', sessionActions.sessionJoin);
+app.delete('/session/cancel', sessionActions.sessionCancel);
 
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
