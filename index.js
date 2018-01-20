@@ -17,6 +17,7 @@ app.post('/user/create', userActions.createUser);
 app.post('/session/create', sessionActions.sessionCreate);
 app.get('/session/getinradius', sessionActions.getInRadius);
 app.put('/session/join', sessionActions.sessionJoin);
+app.get('/session/view', sessionActions.sessionView)
 app.delete('/session/cancel', sessionActions.sessionCancel);
 
 

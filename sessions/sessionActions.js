@@ -89,6 +89,18 @@ module.exports = {
     		if (err.code) res.status(err.code).send(err);
     		else res.status(500).send(err);
     	}
+	},
+
+	sessionView: async function (req, res) {
+		try {
+			const session = await Session.findById(req.query.sessionId);
+
+			res.status(200).send(session);
+		}
+		catch (err) {
+			if (err.code) res.status(err.code).send(err);
+    		else res.status(500).send(err);
+		}
 	}
  }
 
