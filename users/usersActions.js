@@ -1,9 +1,11 @@
-const User = require('./usersModel');
+const User = require('./usersModel.js');
 
 module.exports = {
 	createUser: async function (req, res) {
 	   // console.log(req)
-	    console.log(req.body)
+		console.log(req.body)
+		
+		console.log(User);
 	    var newUser = new User({email: req.body.email})
 
 	    try {
