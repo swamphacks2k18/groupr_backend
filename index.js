@@ -3,29 +3,12 @@ const bodyParser = require('body-parser');
 const app = express()
 app.use(bodyParser());
 
-
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1/Groupr');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-//var kittySchema = mongoose.Schema({
- //   name: String
-  //});
-  //var Kitten = mongoose.model('Kitten', kittySchema);
-  //var silence = new Kitten({ name: 'Silence' });
- // console.log(silence.name); // 'Silence'
-  
- // var Kitten = mongoose.model('Kitten', kittySchema);
-  //var fluffy = new Kitten({ name: 'fluffy' });
-  //fluffy.save(function (err, fluffy) {
-  //  if (err) return console.error(err);
-  //});
-  //Kitten.find(function (err, kittens) {
-  //  if (err) return console.error(err);
-  //  console.log(kittens);
-  //})
 
-  var userSchema = mongoose.Schema({
+var userSchema = mongoose.Schema({
     email: String
 });
 
@@ -40,7 +23,8 @@ var sessionSchema = mongoose.Schema({
     startTime: String,
     endTime: String,
     locationKey: String,
-    owner: String
+    owner: String,
+    members: [{type:String}]
 })
 
 var Session = mongoose.model('Session', sessionSchema);
@@ -61,7 +45,7 @@ app.post('/user/create', function (req, res) {
     });
 })
 
-app.post('/session', function (req, res) {
+app.post('/session/create', function (req, res) {
     // console.log(req)
      console.log(req.body)
      var newSession = new Session(
@@ -84,7 +68,7 @@ app.post('/session', function (req, res) {
     })     
  })
 
- app.get('/session/getinradius', async function (req, res) {
+app.get('/session/getinradius', async function (req, res) {
     console.log(req.body)
 
     const requestLatitude = parseFloat(req.query.latitude);
@@ -93,13 +77,40 @@ app.post('/session', function (req, res) {
     const sessions = await Session.find();
     console.log(sessions);
 
+    let fudgeFactor = 1.05;
     const filteredSessions = sessions.filter((session) => {
-        return Math.sqrt(Math.pow(session.latitude - requestLatitude, 2) + Math.pow(session.longitude - requestLongitude, 2)) <= req.query.radius;
+        return Math.sqrt(Math.pow(session.latitude - requestLatitude, 2) + Math.pow(session.longitude - requestLongitude, 2)) <= req.query.radius * fudgeFactor;
     });
 
     console.log(filteredSessions);
 
     res.status(200).send(filteredSessions);
- })
+}) 
+
+app.put('/session/join', async function (req, res) {
+    console.log(req.body)
+     
+    Session.findById(req.body.sessionId, (err, session) => {  
+        // Handle any possible database errors
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            // Update each attribute with any possible attribute that may have been submitted in the body of the request
+            // If that attribute isn't in the request body, default back to whatever it was before.
+            if (!session.members.includes(req.body.email)) {
+                session.members.push(req.body.email);
+            }
+    
+            // Save the updated document back to the database
+            session.save((err, session) => {
+                if (err) {
+                    res.status(500).send(err)
+                }
+                res.status(200).send(session);
+            });
+        }
+    });
+}) 
+
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))
