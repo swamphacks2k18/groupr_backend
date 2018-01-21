@@ -1,12 +1,24 @@
 const User = require('./usersModel.js');
+const crypto = require('crypto');
+const hash = crypto.createHash('sha256');
 
 module.exports = {
 	createUser: async function (req, res) {
 	   // console.log(req)
 		console.log(req.body)
 		
+		const hashPass = req.body.password;
+		console.log(hashPass);
+		hash.update(hashPass);
+		hashPass = hash.digest('hex'));
+		console.log(hashPass);
+
 		console.log(User);
-	    var newUser = new User({email: req.body.email})
+	    var newUser = new User({
+	    	email: req.body.email,
+	    	name: req.body.name,
+	    	password: hashPass
+	    })
 
 	    try {
 		    const user = await newUser.save();
