@@ -4,7 +4,7 @@ const userSchema = mongoose.Schema({
     email: String,
     name: String,
     password: String,
-    activeSessions: {[mongoose.Schema.Types.ObjectId]} 
+    activeSessions: [{type:mongoose.Schema.Types.ObjectId}] 
 });
 
 const User = mongoose.model('User', userSchema);

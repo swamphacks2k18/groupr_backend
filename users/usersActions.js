@@ -7,17 +7,16 @@ module.exports = {
 	   // console.log(req)
 		console.log(req.body)
 		
-		const hashPass = req.body.password;
-		console.log(hashPass);
-		hash.update(hashPass);
-		hashPass = hash.digest('hex'));
-		console.log(hashPass);
-
-		console.log(User);
+		const password = req.body.password;
+		console.log(password);
+		hash.update(password);
+		let hashedPassword = hash.digest('hex');
+		console.log(hashedPassword);
+		
 	    var newUser = new User({
 	    	email: req.body.email,
 	    	name: req.body.name,
-	    	password: hashPass
+	    	password: hashedPassword
 	    })
 
 	    try {
