@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const sessionSchema = mongoose.Schema({
-    latitude: String,
-    longitude: String,
+    latitude: Number,
+    longitude: Number,
     name: String,
     class: String,
     description: String,
