@@ -4,7 +4,6 @@ const User = require('../users/usersModel');
 module.exports = {
 	sessionCreate: async function (req, res) {
 	    // console.log(req)
-	     console.log(req.body)
 	     var newSession = new Session(
 	        {
 	            latitude: req.body.latitude,
@@ -26,13 +25,11 @@ module.exports = {
 	    }
  	},
  	getInRadius: async function (req, res) {
-	    console.log(req.body)
 
 	    const requestLatitude = parseFloat(req.query.latitude);
 	    const requestLongitude = parseFloat(req.query.longitude);
 
 	    const sessions = await Session.find();
-	    console.log(sessions);
 
 			/*
 
@@ -51,7 +48,6 @@ module.exports = {
 	        return Math.sqrt(Math.pow(session.latitude - requestLatitude, 2) + Math.pow(session.longitude - requestLongitude, 2)) <= req.query.radius * fudgeFactor;
 	    });
 
-	    console.log(filteredSessions);
 
 	    res.status(200).send({ localSessions: filteredSessions });
 	},
@@ -61,7 +57,6 @@ module.exports = {
 
 		try {
 			const sessions = await Session.findbyIdandRemove(id);
-			console.log(sessions);
 
 			res.status(200).send({"Records deleted": sessions.n});
 		} catch (err) {
@@ -74,7 +69,6 @@ module.exports = {
 		const sessionId = req.body.sessionId;
 		const userId = req.body.userId;
 
-		console.log(req.body)
 
 		try {
 	    	const [session, user] = await Promise.all([Session.findById(sessionId), User.findById(userId).populate('activeSessions').exec()]);
@@ -85,7 +79,7 @@ module.exports = {
 
 	        await session.save();
 	        await user.save();
-	        res.status(200).send({ activeSessions: user.activeSessions });
+	        res.status(200).send({ sessions: user.activeSessions });
     	} catch(err) {
 			console.log('tw join err', err);
 				res.status(500).send(err);
@@ -94,9 +88,13 @@ module.exports = {
 
 	sessionView: async function (req, res) {
 		try {
-			const session = await Session.find(req.query);
+			const sessions = await Session.find();
 
-			res.status(200).send(session);
+			const filteredSessions = sessions.filter((session) => {
+				return session.members.includes(req.query.id)
+			});
+
+			res.status(200).send({ sessions: filteredSessions });
 		}
 		catch (err) {
 			if (err.code) res.status(err.code).send(err);

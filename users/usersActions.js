@@ -25,8 +25,6 @@ module.exports = {
 
 	getUser: async function (req, res) {		 
 		 let user = await User.find({"email":req.query.email});
-		console.log(req.query.email);
-		console.log(user);
 		 try {
 			 res.status(200).send(user);
 		 } catch(err) {
