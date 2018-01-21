@@ -12,8 +12,8 @@ module.exports = {
 	            name: req.body.name,
 	            class: req.body.class,
 	            description: req.body.description,
-	            startTime: req.body.startTime,
-	            endTime: req.body.endTime,
+	            startTime: Date.now(),
+	            endTime: Date.now(),
 	            locationKey: req.body.locationKey,
 	            owner: req.body.owner
 	        })
@@ -60,7 +60,7 @@ module.exports = {
 		const id = req.body.id
 
 		try {
-			const sessions = await Session.findbyIDandRemove(id);
+			const sessions = await Session.findbyIdandRemove(id);
 			console.log(sessions);
 
 			res.status(200).send({"Records deleted": sessions.n});
@@ -77,7 +77,7 @@ module.exports = {
 		console.log(req.body)
 
 		try {
-	    	const [session, user] = await Promise.all([Session.findById(sessionId), User.findById(userId)]);
+	    	const [session, user] = await Promise.all([Session.findById(sessionId), User.findById(userId).populate('activeSessions').exec()]);
 
 	        session.members.push(userId);
 	        console.log('tw join', userId, user)

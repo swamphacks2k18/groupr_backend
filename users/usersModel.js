@@ -9,7 +9,8 @@ const userSchema = mongoose.Schema({
     password: String,
     activeSessions: [{
         type:mongoose.Schema.Types.ObjectId,
-        default: []
+        default: [],
+        ref: 'Session'
     }]
 });
 
