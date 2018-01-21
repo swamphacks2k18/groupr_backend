@@ -6,8 +6,8 @@ const sessionSchema = mongoose.Schema({
     name: String,
     class: String,
     description: String,
-    startTime: String,
-    endTime: String,
+    startTime: Date,
+    endTime: Date,
     locationKey: String,
     owner: String,
     members: [{type:String}]

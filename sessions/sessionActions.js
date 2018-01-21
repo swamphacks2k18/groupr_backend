@@ -1,4 +1,5 @@
 const Session = require('./sessionModel');
+const User = require('../users/usersModel');
 
 module.exports = {
 	sessionCreate: async function (req, res) {
@@ -71,22 +72,23 @@ module.exports = {
 
 	sessionJoin: async function (req, res) {
 		const sessionId = req.body.sessionId;
-		const joiningUser = req.body.email;
+		const userId = req.body.userId;
+
+		console.log(req.body)
 
 		try {
-	    	const session = await Session.findById(req.body.sessionId);
+	    	const [session, user] = await Promise.all([Session.findById(sessionId), User.findById(userId)]);
 
-	        if (session.members.includes(joiningUser)) {
-	            throw ErrBadReq('Already signed up.');
-	        }
-
-	        session.members.push(joiningUser);
+	        session.members.push(userId);
+	        console.log('tw join', userId, user)
+	        user.activeSessions.push(session._id);
 
 	        await session.save();
-	        res.status(200).send(session);
+	        await user.save();
+	        res.status(200).send({ activeSessions: user.activeSessions });
     	} catch(err) {
-    		if (err.code) res.status(err.code).send(err);
-    		else res.status(500).send(err);
+			console.log('tw join err', err);
+				res.status(500).send(err);
     	}
 	},
 
