@@ -4,15 +4,15 @@ const hash = crypto.createHash('sha256');
 
 module.exports = {
 	createUser: async function (req, res) {
-		console.log(req.body)
+		console.log('tw', req.body)
 		
 		const password = req.body.password;
-		let hashedPassword = hash.update(password).digest('hex');
+		// const hashedPassword = hash.update(password).digest('hex');
 
-	    var newUser = new User({
+	    const newUser = new User({
 	    	email: req.body.email,
 	    	name: req.body.name,
-	    	password: hashedPassword
+	    	password: password
 	    })
 
 	    try {

@@ -52,7 +52,7 @@ module.exports = {
 
 	    console.log(filteredSessions);
 
-	    res.status(200).send(filteredSessions);
+	    res.status(200).send({ localSessions: filteredSessions });
 	},
 
 	sessionCancel: async function (req, res) {
