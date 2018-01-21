@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const sessionActions = require('./sessions/sessionActions');
 const userActions = require('./users/usersActions');
+const locationActions = require('./locations/locationActions');
 app.use(bodyParser());
 
 const mongoose = require('mongoose');
@@ -13,6 +14,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 // user routes
 app.post('/user/create', userActions.createUser);
 app.get('/user/get', userActions.getUser);
+//app.get('/user/login', userActions.login);
 
 // session routes
 app.post('/session/create', sessionActions.sessionCreate);
@@ -20,6 +22,8 @@ app.get('/session/getinradius', sessionActions.getInRadius);
 app.put('/session/join', sessionActions.sessionJoin);
 app.get('/session/view', sessionActions.sessionView)
 app.delete('/session/cancel', sessionActions.sessionCancel);
+
+app.get('/location', locationActions.get)
 
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'))

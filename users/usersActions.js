@@ -4,15 +4,11 @@ const hash = crypto.createHash('sha256');
 
 module.exports = {
 	createUser: async function (req, res) {
-	   // console.log(req)
 		console.log(req.body)
 		
 		const password = req.body.password;
-		console.log(password);
-		hash.update(password);
-		let hashedPassword = hash.digest('hex');
-		console.log(hashedPassword);
-		
+		let hashedPassword = hash.update(password).digest('hex');
+
 	    var newUser = new User({
 	    	email: req.body.email,
 	    	name: req.body.name,
@@ -36,5 +32,18 @@ module.exports = {
 		 } catch(err) {
 			 res.status(500).send(err);
 		 }
-	 }
+	 },
+
+	 /*login: async function (req, res) {
+		console.log(req.body)
+		
+		const password = req.body.password;
+		let hashedPassword = hash.update(password).digest('hex');
+
+		let user = await User.find({"email": req.query.email, "password":hashedPassword})
+
+		if (user.length >= 1) {
+			res.status(200)
+		}
+	 }*/
 }
